@@ -8,12 +8,28 @@ public class Board {
         this.slots[row][column] = 'N';
     }
 
-    public void getPosition (String chosenPosition) {
+    private boolean validatePositioning (int row, int column) {
+        if (row < 0 || row > 9 || column < 0 || column > 9) {
+            return false;
+        } if (this.slots[row][column] != 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public boolean getPosition (String chosenPosition) {
         char toBeConvertedRow = chosenPosition.charAt(0);
         int row = this.converter.convertPositionToNumber(toBeConvertedRow);
         int column = Character.getNumericValue(chosenPosition.charAt(1));
+        boolean validPosition = this.validatePositioning(row, column);
 
-        this.setShip(row, column);
+        if (validPosition) {
+            this.setShip(row, column);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void renderBoard () {
@@ -28,5 +44,6 @@ public class Board {
                 System.out.println("---------------------------------------");
             }
         }
+        System.out.printf("%n");
     }
 }

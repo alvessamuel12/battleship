@@ -9,11 +9,17 @@ public class GameController {
     private Scanner sc = new Scanner(System.in);
 
     private void deployPlayerShips () {
-        System.out.println("Escolha as posições do seu navio. EX: 'A0'");
+        boolean validPosition = true;
+
+        System.out.printf("Escolha as posições do seu navio. EX: 'A0'%n%n");
         for (int i = 0; i < this.SHIP_AMOUNT; i++) {
-            this.playerBoard.renderBoard();
-            System.out.println("Digite a posicao do navio " + (i + 1));
-            this.playerBoard.getPosition(this.sc.next());
+            do {
+                if (!validPosition) System.out.printf("Ops! Posicionamento inválido! Por favor, repita novamente.%n%n");
+                this.playerBoard.renderBoard();
+                System.out.println("Digite a posicao do navio " + (i + 1));
+                validPosition = this.playerBoard.getPosition(this.sc.next());
+            }
+            while (!validPosition);
         }
     }
 
