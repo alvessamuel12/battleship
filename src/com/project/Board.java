@@ -1,7 +1,7 @@
 package com.project;
 
 public class Board {
-    private char[][] slots = new char[10][10];
+    private Character[][] slots = new Character[10][10];
     private PositionConverter converter = new PositionConverter();
     private final int SHIP_AMOUNT = 10;
 
@@ -21,14 +21,15 @@ public class Board {
         }
     }
 
+    // "a1".matches("[A-Ja-j]{1}[0-9]{1}");
+
     private boolean validatePositioning (int row, int column) {
-        if (row < 0 || row >= this.slots.length || column < 0 || column >= this.slots[0].length) {
-            return false;
-        } if (this.slots[row][column] != 0) {
-            return false;
-        } else {
-            return true;
+        if (this.slots[row][column] != null) {
+            if (row < 0 || row >= this.slots.length || column < 0 || column >= this.slots[0].length) {
+                return false;
+            }
         }
+        return true;  
     }
 
     public boolean getPosition (String chosenPosition) {
@@ -47,16 +48,6 @@ public class Board {
     }
 
     public void renderBoard () {
-        System.out.println("-----------------------------------------");
-        for (int i = 0; i < this.slots.length; i++) {
-            for (int j = 0; j < this.slots[i].length; j++) {
-                System.out.print((j == 0 ? "|" : "") + (this.slots[i][j] == 0 ? "   " : (" " + this.slots[i][j] + " ")) + "|");
-                if (j == (this.slots[0].length - 1)) {
-                    System.out.printf("%n");
-                }
-            }
-            System.out.println("-----------------------------------------");
-        }
-        System.out.printf("%n");
+        UserInterface.renderBoard(this.slots);
     }
 }

@@ -4,7 +4,6 @@ import java.util.Random;
 
 public class Cpu {
     private Random random = new Random();
-    private StringBuilder sb = new StringBuilder();
 
     public String choosePosition () {
         String row = Integer.toString(this.random.nextInt(10));

@@ -6,9 +6,10 @@ public class PositionConverter {
     public int convertPositionToNumber (char toBeConvertedPosition) {
         int numberPosition = 999999999;
         for (int i = 0; i < this.positions.length; i++) {
-            if (toBeConvertedPosition == this.positions[i] || (Character.getNumericValue(toBeConvertedPosition)) == i) {
+            if (Character.toUpperCase(toBeConvertedPosition) == Character.toUpperCase(this.positions[i]) || 
+                (Character.getNumericValue(toBeConvertedPosition)) == i) {
                 numberPosition = i;
-            };
+            }
         }
         return numberPosition;
     }
