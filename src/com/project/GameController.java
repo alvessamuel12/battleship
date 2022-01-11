@@ -72,15 +72,11 @@ public class GameController {
         }
     }
 
-    public void toggle(){
-
-    }
-
 
     private void runBattlePhase(){
         System.out.println("Inicio do Jogo ");
         while(this.playerBoard.getRemainingShips()>0 && this.cpuBoard.getRemainingShips()>0) {
-            this.toggle();
+            toggle();
         }
         String winner = (this.playerBoard.getRemainingShips() > 0) ? "O jogador": "O computador" ;
         System.out.println("Fim do Jogo. O vencedor foi " + winner );
