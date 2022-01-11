@@ -4,10 +4,12 @@ public class Board {
     private Character[][] slots = new Character[10][10];
     private PositionConverter converter = new PositionConverter();
     private final int SHIP_AMOUNT = 10;
+    private int remainingShips;
 
     public int getSHIP_AMOUNT () {
         return this.SHIP_AMOUNT;
     }
+    public int getRemainingShips(){return this.remainingShips;}
 
     private void setShip (int row, int column) {
         this.slots[row][column] = 'N';
@@ -32,6 +34,8 @@ public class Board {
         return true;  
     }
 
+
+
     public boolean getPosition (String chosenPosition) {
         char toBeConvertedRow = chosenPosition.charAt(0);
         int row = this.converter.convertPositionToNumber(toBeConvertedRow);
@@ -46,6 +50,8 @@ public class Board {
             return false;
         }
     }
+
+
 
     public void renderBoard () {
         UserInterface.renderBoard(this.slots);
