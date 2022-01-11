@@ -9,10 +9,15 @@ public class Board {
     public Board() {
         this.remainingShips = SHIP_AMOUNT;
     }
-    
+
     public void addShipAtPosition (Position position) {
         setSlot('N', position);
     }
+
+    public int getRemainingShips(){
+        return this.remainingShips;
+    }
+
 
     public void modifySlot(Position position, Boolean validator) {
         // TODO lógica para modificar o caractere que representa a posição
