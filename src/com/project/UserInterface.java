@@ -2,7 +2,7 @@ package com.project;
 
 public class UserInterface {
 
-    private static final String ALPHABETIC_OPTIONS = "ABCDEFGHIJ";
+    public static final String ALPHABETIC_OPTIONS = "ABCDEFGHIJ";
     private static final Integer [] POSITIONS = {0,1,2,3,4,5,6,7,8,9};
     private static StringBuilder renderizer = new StringBuilder();
     private static final String DELIMITER_LINE = "---------------------------------------------\n";
@@ -28,4 +28,6 @@ public class UserInterface {
         }
         renderizer.append("\n");
     }
+
+    
 }
