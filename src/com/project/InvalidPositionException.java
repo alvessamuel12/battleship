@@ -2,6 +2,6 @@ package com.project;
 
 public class InvalidPositionException extends RuntimeException {
     InvalidPositionException() {
-        super("Posicao invalida!");
+        super("Ops! Posicionamento inválido! Por favor, repita novamente.\n\n");
     }
 }

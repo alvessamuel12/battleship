@@ -9,21 +9,85 @@ public class GameController {
     private Scanner sc = new Scanner(System.in);
     private static PlayerTurns playerOfCurrentTurn;
 
-    void turn() {
+    private void turn() {
         switch (playerOfCurrentTurn) {
             case CPU:
-                String position = cpu.choosePosition();
-                Position convertedPosition = PositionConverter.convertToPosition(position);
-                boolean hasShip = playerBoard.hasShip(convertedPosition);
-                playerBoard.modifySlot(convertedPosition, hasShip);
-                toggle();
+                cpuTurn();
                 break;
             case PLAYER:
-                // TODO criar lógica para turno do player
+                playerTurn();
                 break;
         }
-        // boolean b = verifyIfWinnerExists();
+        toggle();
+    }
 
+    private void cpuTurn() {
+        String position = cpu.choosePosition();
+        Position convertedPosition = PositionConverter.convertToPosition(position);
+        
+        this.cpuBoard.setSlot(UserInterface.SHIP_CHAR, convertedPosition);
+        
+        boolean hasShipAtPlayerSlot = playerBoard.hasShip(convertedPosition);
+        boolean hasShipAtCPUSlot = cpuBoard.hasShip(convertedPosition);
+    
+        if (hasShipAtPlayerSlot) {
+           
+            if (hasShipAtCPUSlot) {
+                this.playerBoard.deleteShip(convertedPosition);
+                this.cpuBoard.setSlot(UserInterface.KILLED_SHIP_AT_SAME_SLOT_CHAR, convertedPosition);
+            } else {
+                if (this.playerBoard.getSlot(convertedPosition).equals(UserInterface.KILLED_SHIP_AT_SAME_SLOT_CHAR)) {
+                    this.playerBoard.deleteShip(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
+                } else {
+                    this.playerBoard.deleteShip(convertedPosition);
+                    this.cpuBoard.setSlot(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
+                }
+            }
+        } else {
+            if (hasShipAtCPUSlot) {
+                this.cpuBoard.setSlot(UserInterface.WRONG_SHOT_AT_SAME_SLOT_CHAR, convertedPosition);
+            } else {
+                this.cpuBoard.setSlot(UserInterface.WRONG_SHOT_CHAR, convertedPosition);
+            }
+        }
+    }
+
+    private void playerTurn() {
+        this.playerBoard.renderBoard();
+        String position = "";
+        do {
+            try {
+                position = UserInterface.inputPlayerPosition("Digite a posicao que voce deseja atacar: ");
+            } catch(Exception e) {
+                System.out.println(e.getMessage());
+            }
+        } while (position.equals(""));
+        Position convertedPosition = PositionConverter.convertToPosition(position);
+        boolean hasShipAtCPUSlot = cpuBoard.hasShip(convertedPosition);
+        boolean hasShipAtPlayerSlot = playerBoard.hasShip(convertedPosition);
+
+        if (hasShipAtCPUSlot) {
+            
+            if (hasShipAtPlayerSlot) {
+                this.cpuBoard.deleteShip(convertedPosition);
+                this.playerBoard.setSlot(UserInterface.KILLED_SHIP_AT_SAME_SLOT_CHAR, convertedPosition);
+            } else {
+                if (this.cpuBoard.getSlot(convertedPosition).equals(UserInterface.KILLED_SHIP_AT_SAME_SLOT_CHAR)) {
+                    this.cpuBoard.deleteShip(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
+                    this.playerBoard.setSlot(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
+                } else {
+                    this.cpuBoard.deleteShip(convertedPosition);
+                    this.playerBoard.setSlot(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
+                }
+            }
+
+        } else {
+            if (hasShipAtPlayerSlot) {
+                this.playerBoard.setSlot(UserInterface.WRONG_SHOT_AT_SAME_SLOT_CHAR, convertedPosition);
+            } else {
+                this.playerBoard.setSlot(UserInterface.WRONG_SHOT_CHAR, convertedPosition);
+            }
+        }
     }
 
     private static void toggle() {
@@ -36,9 +100,6 @@ public class GameController {
                 break;
         }
     }
-
-
-    // TODO refatorar metodos deploy para um metodo deploy generico para evitar duplicatas
 
     private void deployPlayerShips () {
         boolean validPosition = true;
@@ -73,13 +134,16 @@ public class GameController {
     }
 
 
-    private void runBattlePhase(){
+    private void runBattlePhase() {
         System.out.println("Inicio do Jogo ");
+        
+        this.playerOfCurrentTurn = PlayerTurns.PLAYER;
+        
         while(this.playerBoard.getRemainingShips()>0 && this.cpuBoard.getRemainingShips()>0) {
-            toggle();
+            turn();
         }
         String winner = (this.playerBoard.getRemainingShips() > 0) ? "O jogador": "O computador" ;
-        System.out.println("Fim do Jogo. O vencedor foi " + winner );
+        System.out.println("\n\nFim do Jogo. O vencedor foi " + winner );
 
     }
 
@@ -88,11 +152,12 @@ public class GameController {
         this.deployCpuShips();
     }
 
-
     public void runGame () {
         this.runDeployPhase();
         //start game
         this.runBattlePhase();
+
+        // TODO lógica para jogar novamente
 
     }
 }

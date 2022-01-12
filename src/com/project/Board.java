@@ -11,17 +11,24 @@ public class Board {
     }
 
     public void addShipAtPosition (Position position) {
-        setSlot('N', position);
+        setSlot(UserInterface.SHIP_CHAR, position);
     }
 
     public int getRemainingShips(){
         return this.remainingShips;
     }
 
-
-    public void modifySlot(Position position, Boolean validator) {
-        // TODO lógica para modificar o caractere que representa a posição
+    public void deleteShip(Position position) {
+        setSlot(null, position);
+        remainingShips--;
     }
+
+    public void deleteShip(Character shipStatus, Position position) {
+        setSlot(shipStatus, position);
+        remainingShips--;
+    }
+
+
 
     public Character getSlot(Position position) {
         return this.slots[position.getRow()][position.getColumn()];
@@ -37,9 +44,9 @@ public class Board {
 
     public boolean hasShip(Position position) {
         Character slot = getSlot(position);
-        if (slot.equals('N')
+        if (slot != null && (slot.equals('N')
             || slot.equals('n')
-            || slot.equals('X'))
+            || slot.equals('X')))
             return true;
         return false;
     }

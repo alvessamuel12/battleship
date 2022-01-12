@@ -1,11 +1,19 @@
 package com.project;
 
+import java.util.Scanner;
+
 public class UserInterface {
 
+    public static final Character SHIP_CHAR = 'N';
+    public static final Character KILLED_SHIP_AT_SAME_SLOT_CHAR = 'X';
+    public static final Character WRONG_SHOT_AT_SAME_SLOT_CHAR = 'n';
+    public static final Character KILLED_SHIP_CHAR = '*';
+    public static final Character WRONG_SHOT_CHAR = '-';
     public static final String ALPHABETIC_OPTIONS = "ABCDEFGHIJ";
+    private static final String DELIMITER_LINE = "---------------------------------------------\n";
+    
     private static final Integer [] POSITIONS = {0,1,2,3,4,5,6,7,8,9};
     private static StringBuilder renderizer = new StringBuilder();
-    private static final String DELIMITER_LINE = "---------------------------------------------\n";
 
     public static void renderBoard(Object [][] boardToRender) {
         int atualLap = 0;
@@ -29,5 +37,13 @@ public class UserInterface {
         renderizer.append("\n");
     }
 
+    public static String inputPlayerPosition(String message) throws InvalidPositionException {
+        Scanner in = new Scanner(System.in);
+        System.out.print(message);
+        String input = in.next();
+        if (!PositionConverter.validatePosition(input))
+            throw new InvalidPositionException();
+        return input;
+    }
     
 }
