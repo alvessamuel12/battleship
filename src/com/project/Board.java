@@ -39,8 +39,9 @@ public class Board {
     }
 
     public void renderBoard () {
-        UserInterface.renderBoard(this.slots);
+        UserInterface.renderBoard(this.slots,this.remainingShips);
     }
+
 
     public boolean hasShip(Position position) {
         Character slot = getSlot(position);

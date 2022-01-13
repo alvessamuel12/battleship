@@ -52,8 +52,11 @@ public class GameController {
         }
     }
 
+
+
     private void playerTurn() {
         this.playerBoard.renderBoard();
+
         String position = "";
         do {
             try {
