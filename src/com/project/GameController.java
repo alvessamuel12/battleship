@@ -26,26 +26,29 @@ public class GameController {
         Position convertedPosition = PositionConverter.convertToPosition(position);
         boolean hasShipAtPlayerSlot = playerBoard.hasShip(convertedPosition);
         boolean hasShipAtCPUSlot = cpuBoard.hasShip(convertedPosition);
-    
-        if (hasShipAtPlayerSlot) {
-           
-            if (hasShipAtCPUSlot) {
-                this.playerBoard.deleteShip(convertedPosition);
-                this.cpuBoard.setSlot(UserInterface.KILLED_SHIP_AT_SAME_SLOT_CHAR, convertedPosition);
-            } else {
-                if (this.playerBoard.getSlot(convertedPosition).equals(UserInterface.KILLED_SHIP_AT_SAME_SLOT_CHAR)) {
-                    this.playerBoard.deleteShip(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
-                    this.cpuBoard.setSlot(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
-                } else {
+        boolean isNotNull = this.cpuBoard.getSlot(convertedPosition) != null;
+        boolean invalidPosition = isNotNull && (this.cpuBoard.getSlot(convertedPosition).equals(UserInterface.KILLED_SHIP_CHAR) ||
+                this.cpuBoard.getSlot(convertedPosition).equals(UserInterface.KILLED_SHIP_AT_SAME_SLOT_CHAR));
+        if (!invalidPosition) { 
+            if (hasShipAtPlayerSlot) {
+                if (hasShipAtCPUSlot) {
                     this.playerBoard.deleteShip(convertedPosition);
-                    this.cpuBoard.setSlot(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
+                    this.cpuBoard.setSlot(UserInterface.KILLED_SHIP_AT_SAME_SLOT_CHAR, convertedPosition);
+                } else {
+                    if (this.playerBoard.getSlot(convertedPosition).equals(UserInterface.KILLED_SHIP_AT_SAME_SLOT_CHAR)) {
+                        this.playerBoard.deleteShip(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
+                        this.cpuBoard.setSlot(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
+                    } else {
+                        this.playerBoard.deleteShip(convertedPosition);
+                        this.cpuBoard.setSlot(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
+                    }
                 }
-            }
-        } else {
-            if (hasShipAtCPUSlot) {
-                this.cpuBoard.setSlot(UserInterface.WRONG_SHOT_AT_SAME_SLOT_CHAR, convertedPosition);
             } else {
-                this.cpuBoard.setSlot(UserInterface.WRONG_SHOT_CHAR, convertedPosition);
+                if (hasShipAtCPUSlot) {
+                    this.cpuBoard.setSlot(UserInterface.WRONG_SHOT_AT_SAME_SLOT_CHAR, convertedPosition);
+                } else {
+                    this.cpuBoard.setSlot(UserInterface.WRONG_SHOT_CHAR, convertedPosition);
+                }
             }
         }
     }
@@ -67,27 +70,30 @@ public class GameController {
         Position convertedPosition = PositionConverter.convertToPosition(position);
         boolean hasShipAtCPUSlot = cpuBoard.hasShip(convertedPosition);
         boolean hasShipAtPlayerSlot = playerBoard.hasShip(convertedPosition);
-
-        if (hasShipAtCPUSlot) {
-            
-            if (hasShipAtPlayerSlot) {
-                this.cpuBoard.deleteShip(convertedPosition);
-                this.playerBoard.setSlot(UserInterface.KILLED_SHIP_AT_SAME_SLOT_CHAR, convertedPosition);
-            } else {
-                if (this.cpuBoard.getSlot(convertedPosition).equals(UserInterface.KILLED_SHIP_AT_SAME_SLOT_CHAR)) {
-                    this.cpuBoard.deleteShip(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
-                    this.playerBoard.setSlot(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
-                } else {
+        boolean isNotNull = this.playerBoard.getSlot(convertedPosition) != null;
+        boolean invalidPosition = isNotNull && (this.playerBoard.getSlot(convertedPosition).equals(UserInterface.KILLED_SHIP_CHAR) ||
+                this.playerBoard.getSlot(convertedPosition).equals(UserInterface.KILLED_SHIP_AT_SAME_SLOT_CHAR));
+        if (!invalidPosition) {
+            if (hasShipAtCPUSlot) {
+                if (hasShipAtPlayerSlot) {
                     this.cpuBoard.deleteShip(convertedPosition);
-                    this.playerBoard.setSlot(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
+                    this.playerBoard.setSlot(UserInterface.KILLED_SHIP_AT_SAME_SLOT_CHAR, convertedPosition);
+                } else {
+                    if (this.cpuBoard.getSlot(convertedPosition).equals(UserInterface.KILLED_SHIP_AT_SAME_SLOT_CHAR)) {
+                        this.cpuBoard.deleteShip(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
+                        this.playerBoard.setSlot(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
+                    } else {
+                        this.cpuBoard.deleteShip(convertedPosition);
+                        this.playerBoard.setSlot(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
+                    }
                 }
-            }
 
-        } else {
-            if (hasShipAtPlayerSlot) {
-                this.playerBoard.setSlot(UserInterface.WRONG_SHOT_AT_SAME_SLOT_CHAR, convertedPosition);
             } else {
-                this.playerBoard.setSlot(UserInterface.WRONG_SHOT_CHAR, convertedPosition);
+                if (hasShipAtPlayerSlot) {
+                    this.playerBoard.setSlot(UserInterface.WRONG_SHOT_AT_SAME_SLOT_CHAR, convertedPosition);
+                } else {
+                    this.playerBoard.setSlot(UserInterface.WRONG_SHOT_CHAR, convertedPosition);
+                }
             }
         }
     }
@@ -107,32 +113,40 @@ public class GameController {
         boolean validPosition = true;
 
         System.out.printf("\n\nEscolha as posições do seu navio. EX: 'A0'%n%n");
-        for (int i = 1; i <= Board.SHIP_AMOUNT; i++) {
-            String position;
+        for (int i = 0; i < Board.SHIP_AMOUNT; i++) {
+            String inputPosition;
+            Position currentPosition = null;
             do {
                 if (!validPosition) System.out.printf("Ops! Posicionamento inválido! Por favor, repita novamente.%n%n");
                 this.playerBoard.renderBoard();
                 System.out.println("Digite a posicao do navio " + i);
-                position = this.sc.next();
-                validPosition = PositionConverter.validatePosition(position);
-            }
-            while (!validPosition);
-            this.playerBoard.addShipAtPosition(PositionConverter.convertToPosition(position));
+                inputPosition = this.sc.next();
+                validPosition = PositionConverter.validatePosition(inputPosition);
+                if (validPosition) {
+                    currentPosition = PositionConverter.convertToPosition(inputPosition);
+                    validPosition = !this.playerBoard.hasShip(currentPosition);
+                }
+            } while (!validPosition);
+            this.playerBoard.addShipAtPosition(currentPosition);
         }
     }
 
     private void deployCpuShips () {
-        boolean validPosition = false;
+        boolean validPosition = true;
 
         for (int i = 0; i < Board.SHIP_AMOUNT; i++) {
-            String position;
+            String inputPosition;
+            Position currentPosition = null;
             do {
-                position = this.cpu.choosePosition();
-                validPosition = PositionConverter.validatePosition(position);
+                inputPosition = this.cpu.choosePosition();
+                validPosition = PositionConverter.validatePosition(inputPosition);
+                if (validPosition) {
+                    currentPosition = PositionConverter.convertToPosition(inputPosition);
+                    validPosition = !this.cpuBoard.hasShip(currentPosition);
+                }
             }
             while (!validPosition);
-            validPosition = !this.cpuBoard.hasShip(PositionConverter.convertToPosition(position));
-            this.cpuBoard.addShipAtPosition(PositionConverter.convertToPosition(position));
+            this.cpuBoard.addShipAtPosition(currentPosition);
         }
     }
 
