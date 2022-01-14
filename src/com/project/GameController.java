@@ -113,7 +113,7 @@ public class GameController {
         boolean validPosition = true;
 
         System.out.printf("\n\nEscolha as posições do seu navio. EX: 'A0'%n%n");
-        for (int i = 0; i < Board.SHIP_AMOUNT; i++) {
+        for (int i = 1; i <= Board.SHIP_AMOUNT; i++) {
             String inputPosition;
             Position currentPosition = null;
             do {
@@ -200,12 +200,31 @@ public class GameController {
         this.deployCpuShips();
     }
 
+    private boolean checkPlayAgain (){
+        Character input;
+
+        System.out.println("Deseja jogar novamente? s/n");
+        input = sc.next().charAt(0);
+
+        if (!input.equals('s') && !input.equals('n')) {
+            checkPlayAgain();
+        } else {
+            if (input == 's') {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void runGame () {
+        boolean gameNeedsToBeRepeated;
+
         this.runDeployPhase();
-        //start game
         this.runBattlePhase();
 
-        // TODO lógica para jogar novamente
-
+        gameNeedsToBeRepeated = checkPlayAgain();
+        if (gameNeedsToBeRepeated) {
+            runGame();
+        }
     }
 }
