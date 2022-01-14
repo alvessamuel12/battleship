@@ -28,8 +28,6 @@ public class Board {
         remainingShips--;
     }
 
-
-
     public Character getSlot(Position position) {
         return this.slots[position.getRow()][position.getColumn()];
     }
@@ -39,7 +37,7 @@ public class Board {
     }
 
     public void renderBoard () {
-        UserInterface.renderBoard(this.slots,this.remainingShips);
+        UserInterface.renderBoard(this.slots);
     }
 
 

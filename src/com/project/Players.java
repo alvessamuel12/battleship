@@ -1,6 +1,6 @@
 package com.project;
 
-public enum PlayerTurns {
+public enum Players {
     CPU,
     PLAYER
 }

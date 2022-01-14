@@ -7,7 +7,7 @@ public class GameController {
     private Board cpuBoard = new Board();
     private Cpu cpu = new Cpu();
     private Scanner sc = new Scanner(System.in);
-    private static PlayerTurns playerOfCurrentTurn;
+    private static Players playerOfCurrentTurn;
 
     private void turn() {
         switch (playerOfCurrentTurn) {
@@ -55,6 +55,7 @@ public class GameController {
 
 
     private void playerTurn() {
+
         this.playerBoard.renderBoard();
 
         String position = "";
@@ -96,10 +97,10 @@ public class GameController {
     private static void toggle() {
         switch (playerOfCurrentTurn) {
             case CPU:
-                playerOfCurrentTurn = PlayerTurns.PLAYER;
+                playerOfCurrentTurn = Players.PLAYER;
                 break;
             case PLAYER:
-                playerOfCurrentTurn = PlayerTurns.CPU;
+                playerOfCurrentTurn = Players.CPU;
                 break;
         }
     }
@@ -107,7 +108,8 @@ public class GameController {
     private void deployPlayerShips () {
         boolean validPosition = true;
 
-        System.out.printf("Escolha as posições do seu navio. EX: 'A0'%n%n");
+        System.out.printf("\n\nEscolha as posições do seu navio. EX: 'A0'%n%n");
+        System.out.print(UserInterface.renderRemainingShips(this.playerBoard.getRemainingShips()));
         for (int i = 1; i <= Board.SHIP_AMOUNT; i++) {
             String position;
             do {
@@ -140,14 +142,45 @@ public class GameController {
     private void runBattlePhase() {
         System.out.println("Inicio do Jogo ");
         
-        this.playerOfCurrentTurn = PlayerTurns.PLAYER;
+        this.playerOfCurrentTurn = Players.PLAYER;
         
         while(this.playerBoard.getRemainingShips()>0 && this.cpuBoard.getRemainingShips()>0) {
             turn();
         }
-        String winner = (this.playerBoard.getRemainingShips() > 0) ? "O jogador": "O computador" ;
-        System.out.println("\n\nFim do Jogo. O vencedor foi " + winner );
+        String winner = (getWinner() == Players.PLAYER) ? "O jogador": "O computador" ;
+        System.out.println("\n\n\t\tFim do Jogo. O vencedor foi " + winner +"!");
 
+        System.out.println(UserInterface.DELIMITER_LONG_LINE);
+        System.out.println("Imprimindo resultado dos tabuleiros...");
+        System.out.println(UserInterface.DELIMITER_LONG_LINE);
+
+        showFinalBoardsResult();
+    }
+
+    private Players getWinner() {
+        return this.playerBoard.getRemainingShips() > 0 ? Players.PLAYER : Players.CPU;
+    }
+
+    private void showFinalBoardsResult() {
+        if (getWinner() == Players.PLAYER) {
+            showPlayerBoardResult();
+            System.out.println(UserInterface.DELIMITER_LONG_LINE);
+            showCpuBoardResult();
+        } else {
+            showCpuBoardResult();
+            System.out.println(UserInterface.DELIMITER_LONG_LINE);
+            showPlayerBoardResult();
+        }
+    }
+
+    private void showCpuBoardResult() {
+        System.out.println("\t\tTabuleiro do Cpu\n\n");
+        this.cpuBoard.renderBoard();
+    }
+
+    private void showPlayerBoardResult() {
+        System.out.println("\t\tTabuleiro do jogador\n\n");
+        this.playerBoard.renderBoard();
     }
 
     private void runDeployPhase () {
