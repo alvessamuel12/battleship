@@ -32,7 +32,7 @@ public class UserInterface {
     }
 
     public static String renderRemainingShips(int remainingShips){
-        return "\t\t\tContador navios:  " + remainingShips + "\n\n";
+        return "\n\n\t\t\tContador navios:  " + remainingShips + "\n\n";
     }
 
     private static void renderLine(Object [] line) {

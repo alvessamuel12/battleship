@@ -24,9 +24,6 @@ public class GameController {
     private void cpuTurn() {
         String position = cpu.choosePosition();
         Position convertedPosition = PositionConverter.convertToPosition(position);
-        
-        this.cpuBoard.setSlot(UserInterface.SHIP_CHAR, convertedPosition);
-        
         boolean hasShipAtPlayerSlot = playerBoard.hasShip(convertedPosition);
         boolean hasShipAtCPUSlot = cpuBoard.hasShip(convertedPosition);
     
@@ -38,6 +35,7 @@ public class GameController {
             } else {
                 if (this.playerBoard.getSlot(convertedPosition).equals(UserInterface.KILLED_SHIP_AT_SAME_SLOT_CHAR)) {
                     this.playerBoard.deleteShip(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
+                    this.cpuBoard.setSlot(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
                 } else {
                     this.playerBoard.deleteShip(convertedPosition);
                     this.cpuBoard.setSlot(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
@@ -55,7 +53,7 @@ public class GameController {
 
 
     private void playerTurn() {
-
+        System.out.print(UserInterface.renderRemainingShips(this.playerBoard.getRemainingShips()));
         this.playerBoard.renderBoard();
 
         String position = "";
@@ -109,7 +107,6 @@ public class GameController {
         boolean validPosition = true;
 
         System.out.printf("\n\nEscolha as posições do seu navio. EX: 'A0'%n%n");
-        System.out.print(UserInterface.renderRemainingShips(this.playerBoard.getRemainingShips()));
         for (int i = 1; i <= Board.SHIP_AMOUNT; i++) {
             String position;
             do {
@@ -125,15 +122,16 @@ public class GameController {
     }
 
     private void deployCpuShips () {
-        boolean validPosition = true;
+        boolean validPosition = false;
 
-        for (int i = 1; i <= Board.SHIP_AMOUNT; i++) {
+        for (int i = 0; i < Board.SHIP_AMOUNT; i++) {
             String position;
             do {
                 position = this.cpu.choosePosition();
                 validPosition = PositionConverter.validatePosition(position);
             }
             while (!validPosition);
+            validPosition = !this.cpuBoard.hasShip(PositionConverter.convertToPosition(position));
             this.cpuBoard.addShipAtPosition(PositionConverter.convertToPosition(position));
         }
     }
