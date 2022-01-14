@@ -10,8 +10,8 @@ public class UserInterface {
     public static final Character KILLED_SHIP_CHAR = '*';
     public static final Character WRONG_SHOT_CHAR = '-';
     public static final String ALPHABETIC_OPTIONS = "ABCDEFGHIJ";
-    public static final String DELIMITER_LONG_LINE = "---------------------------------------------------------";
-    private static final String DELIMITER_BOARD_LINE = "\n\n---------------------------------------------\n\n\n";
+    public static final String DELIMITER_LONG_LINE = "\n\n---------------------------------------------------------\n\n";
+    private static final String DELIMITER_BOARD_LINE = "---------------------------------------------\n";
 
     private static final Integer [] POSITIONS = {0,1,2,3,4,5,6,7,8,9};
     private static StringBuilder renderizer = new StringBuilder();
