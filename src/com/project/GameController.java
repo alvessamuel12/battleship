@@ -29,7 +29,7 @@ public class GameController {
         boolean isNotNull = this.cpuBoard.getSlot(convertedPosition) != null;
         boolean invalidPosition = isNotNull && (this.cpuBoard.getSlot(convertedPosition).equals(UserInterface.KILLED_SHIP_CHAR) ||
                 this.cpuBoard.getSlot(convertedPosition).equals(UserInterface.KILLED_SHIP_AT_SAME_SLOT_CHAR));
-        if (!invalidPosition) { 
+        if (!invalidPosition) {
             if (hasShipAtPlayerSlot) {
                 if (hasShipAtCPUSlot) {
                     this.playerBoard.deleteShip(convertedPosition);
@@ -37,6 +37,9 @@ public class GameController {
                 } else {
                     if (this.playerBoard.getSlot(convertedPosition).equals(UserInterface.KILLED_SHIP_AT_SAME_SLOT_CHAR)) {
                         this.playerBoard.deleteShip(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
+                        this.cpuBoard.setSlot(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
+                    } if (this.playerBoard.getSlot(convertedPosition).equals(UserInterface.WRONG_SHOT_AT_SAME_SLOT_CHAR)) {
+                        this.playerBoard.deleteShip(UserInterface.WRONG_SHOT_CHAR, convertedPosition);
                         this.cpuBoard.setSlot(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
                     } else {
                         this.playerBoard.deleteShip(convertedPosition);
@@ -81,6 +84,9 @@ public class GameController {
                 } else {
                     if (this.cpuBoard.getSlot(convertedPosition).equals(UserInterface.KILLED_SHIP_AT_SAME_SLOT_CHAR)) {
                         this.cpuBoard.deleteShip(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
+                        this.playerBoard.setSlot(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
+                    } if (this.cpuBoard.getSlot(convertedPosition).equals(UserInterface.WRONG_SHOT_AT_SAME_SLOT_CHAR)) {
+                        this.cpuBoard.deleteShip(UserInterface.WRONG_SHOT_CHAR, convertedPosition);
                         this.playerBoard.setSlot(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
                     } else {
                         this.cpuBoard.deleteShip(convertedPosition);
