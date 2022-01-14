@@ -1,5 +1,6 @@
 package com.project;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class GameController {
@@ -22,7 +23,8 @@ public class GameController {
     }
 
     private void cpuTurn() {
-        String position = cpu.choosePosition();
+
+        String position = cpu.choosePositionCpuWins();
         Position convertedPosition = PositionConverter.convertToPosition(position);
         boolean hasShipAtPlayerSlot = playerBoard.hasShip(convertedPosition);
         boolean hasShipAtCPUSlot = cpuBoard.hasShip(convertedPosition);
@@ -58,9 +60,12 @@ public class GameController {
 
 
 
+
+
     private void playerTurn() {
         System.out.print(UserInterface.renderRemainingShips(this.playerBoard.getRemainingShips()));
         this.playerBoard.renderBoard();
+        // this.cpuBoard.renderBoard();
 
         String position = "";
         do {
@@ -134,6 +139,7 @@ public class GameController {
                 }
             } while (!validPosition);
             this.playerBoard.addShipAtPosition(currentPosition);
+
         }
     }
 
@@ -158,6 +164,7 @@ public class GameController {
 
 
     private void runBattlePhase() {
+
         System.out.println("Inicio do Jogo ");
         
         this.playerOfCurrentTurn = Players.PLAYER;
@@ -204,6 +211,12 @@ public class GameController {
     private void runDeployPhase () {
         this.deployPlayerShips();
         this.deployCpuShips();
+
+        for (int i=0; i< 10;i++){
+            cpu.playerSlots[i] = Arrays.copyOf(playerBoard.slots[i],playerBoard.slots[i].length);
+        }
+
+
     }
 
     private boolean checkPlayAgain (){
@@ -230,6 +243,8 @@ public class GameController {
 
         gameNeedsToBeRepeated = checkPlayAgain();
         if (gameNeedsToBeRepeated) {
+            this.cpuBoard = new Board();
+            this.playerBoard = new Board();
             runGame();
         }
     }

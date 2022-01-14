@@ -2,8 +2,8 @@ package com.project;
 
 public class Board {
 
-    private Character[][] slots = new Character[10][10];
-    public static final int SHIP_AMOUNT = 10;
+    public Character[][] slots = new Character[10][10];
+    public static final int SHIP_AMOUNT = 5;
     private int remainingShips;
 
     public Board() {
@@ -13,6 +13,7 @@ public class Board {
     public void addShipAtPosition (Position position) {
         setSlot(UserInterface.SHIP_CHAR, position);
     }
+
 
     public int getRemainingShips(){
         return this.remainingShips;
