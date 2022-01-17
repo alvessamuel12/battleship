@@ -29,7 +29,7 @@ public class GameController {
         boolean isNotNull = this.cpuBoard.getSlot(convertedPosition) != null;
         boolean invalidPosition = isNotNull && (this.cpuBoard.getSlot(convertedPosition).equals(UserInterface.KILLED_SHIP_CHAR) ||
                 this.cpuBoard.getSlot(convertedPosition).equals(UserInterface.KILLED_SHIP_AT_SAME_SLOT_CHAR));
-        if (!invalidPosition) { 
+        if (!invalidPosition) {
             if (hasShipAtPlayerSlot) {
                 if (hasShipAtCPUSlot) {
                     this.playerBoard.deleteShip(convertedPosition);
@@ -37,6 +37,9 @@ public class GameController {
                 } else {
                     if (this.playerBoard.getSlot(convertedPosition).equals(UserInterface.KILLED_SHIP_AT_SAME_SLOT_CHAR)) {
                         this.playerBoard.deleteShip(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
+                        this.cpuBoard.setSlot(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
+                    } if (this.playerBoard.getSlot(convertedPosition).equals(UserInterface.WRONG_SHOT_AT_SAME_SLOT_CHAR)) {
+                        this.playerBoard.deleteShip(UserInterface.WRONG_SHOT_CHAR, convertedPosition);
                         this.cpuBoard.setSlot(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
                     } else {
                         this.playerBoard.deleteShip(convertedPosition);
@@ -82,6 +85,9 @@ public class GameController {
                     if (this.cpuBoard.getSlot(convertedPosition).equals(UserInterface.KILLED_SHIP_AT_SAME_SLOT_CHAR)) {
                         this.cpuBoard.deleteShip(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
                         this.playerBoard.setSlot(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
+                    } if (this.cpuBoard.getSlot(convertedPosition).equals(UserInterface.WRONG_SHOT_AT_SAME_SLOT_CHAR)) {
+                        this.cpuBoard.deleteShip(UserInterface.WRONG_SHOT_CHAR, convertedPosition);
+                        this.playerBoard.setSlot(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
                     } else {
                         this.cpuBoard.deleteShip(convertedPosition);
                         this.playerBoard.setSlot(UserInterface.KILLED_SHIP_CHAR, convertedPosition);
@@ -113,7 +119,7 @@ public class GameController {
         boolean validPosition = true;
 
         System.out.printf("\n\nEscolha as posições do seu navio. EX: 'A0'%n%n");
-        for (int i = 0; i < Board.SHIP_AMOUNT; i++) {
+        for (int i = 1; i <= Board.SHIP_AMOUNT; i++) {
             String inputPosition;
             Position currentPosition = null;
             do {
@@ -200,12 +206,31 @@ public class GameController {
         this.deployCpuShips();
     }
 
+    private boolean checkPlayAgain (){
+        Character input;
+
+        System.out.println("Deseja jogar novamente? s/n");
+        input = sc.next().charAt(0);
+
+        if (!input.equals('s') && !input.equals('n')) {
+            checkPlayAgain();
+        } else {
+            if (input == 's') {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void runGame () {
+        boolean gameNeedsToBeRepeated;
+
         this.runDeployPhase();
-        //start game
         this.runBattlePhase();
 
-        // TODO lógica para jogar novamente
-
+        gameNeedsToBeRepeated = checkPlayAgain();
+        if (gameNeedsToBeRepeated) {
+            runGame();
+        }
     }
 }
